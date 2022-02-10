@@ -1,31 +1,51 @@
+import { useEffect, useState } from "react";
+import { api } from "../../services/api";
 import { Container } from "./styles";
 
 
+interface Transaction {
+  nome: string;
+  titulo_curso: string;
+  avaliacao: string;
+  data: string,
+  depoimento: string;
+}
+
+
 export function TranscantionsTable() {
+
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+  useEffect(() => {
+    api.get('brief')
+      .then(response => setTransactions(response.data));
+  }, []);
+
+
   return (
     <Container>
       <table>
         <thead>
           <tr>
-            <th>Título</th>
-            <th>Valor</th>
-            <th>Categoria</th>
+            <th>Nome</th>
+            <th>Curso</th>
+            <th>Avalicão</th>
             <th>Data</th>
+            <th>Depoimento</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Desenvolvimento de website</td>
-            <td className="deposit">R$12.000</td>
-            <td>Desenvolvimento</td>
-            <td>20/02/2021</td>
-          </tr>
-          <tr>
-            <td>Aluguel</td>
-            <td className="withdraw">R$-1.000</td>
-            <td>Contas</td>
-            <td>01/01/2021</td>
-          </tr>
+          {transactions.map(transaction => {
+            return (
+              <tr>
+                <td>{transaction.nome}</td>
+                <td className="deposit">{transaction.titulo_curso}</td>
+                <td>{transaction.avaliacao}</td>
+                <td>{transaction.data}</td>
+                <td>{transaction.depoimento}</td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </Container>
